@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class MoneyController : MonoBehaviour
 {
-    public GameController gc;
+    public GameController gameController;
 
-    private int money;
+   [field: SerializeField]
+    public int Money { get;  set; }
 
     public int ChangingMoney(int moneyAmount)
     {
-        money += moneyAmount;
-        return money;
+        Money += moneyAmount;
+        return Money;
     }
 }

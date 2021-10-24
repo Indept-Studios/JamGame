@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Events : MonoBehaviour
+public class EventController : MonoBehaviour
 {
     public GameController gc;
     public void rndEvent()
@@ -31,7 +31,7 @@ public class Events : MonoBehaviour
                 }
             case 10:
                 {
-                    gc.money = 0;
+                    gc.moneyController.Money = 0;
                     gc.eventHappend.text = "oh noooo, everything gone.... WHY???? WHY???";
                     break;
                 }
@@ -39,7 +39,7 @@ public class Events : MonoBehaviour
                 {
                     if (gc.isInternational == true)
                     {
-                        gc.money = 500;
+                        gc.moneyController.Money +=500;
                         gc.eventHappend.text = "This damned taxes";
                     }
                     break;
@@ -49,7 +49,7 @@ public class Events : MonoBehaviour
                     if (gc.offices.Count >= 25)
                     {
                         gc.offices.RemoveRange(0, (Random.Range(1, 24)));
-                        gc.money += 500;
+                        gc.moneyController.Money +=5000;
                         gc.eventHappend.text = "hard Times, u have to sell some Offices";
                     }
                     break;
@@ -63,10 +63,9 @@ public class Events : MonoBehaviour
                 break;
             case 30:
                 {
-                    if (gc.money > 50000)
+                    if (gc.moneyController.Money > 50000)
                     {
-                        gc.mc.ChangingMoney(-5000);
-                        //gc.money -= Random.Range(1000, 1000000);
+                        gc.moneyController.Money -= Random.Range(1000, 1000000);
                         gc.eventHappend.text = "Burglary at the Bank you lost some money";
                     }
                     break;
@@ -76,7 +75,7 @@ public class Events : MonoBehaviour
                     if (gc.offices.Count >= 100)
                     {
                         gc.offices.RemoveRange(0, (Random.Range(1, 99)));
-                        gc.money += 5000;
+                        gc.moneyController.Money += 5000;
                         gc.eventHappend.text = "hard Times, u have to sell some Offices";
                     }
                     break;

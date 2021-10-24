@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    [Header("UI")]
     public Text truckCount;
     public Text moneyCount;
     public Text officCount;
@@ -26,14 +27,11 @@ public class GameController : MonoBehaviour
     public Button btnNewOffice;
     public Button btnInternational;
 
-    public Events events;
+    [Header("Controller")]
+    public EventController eventController;
+    public MoneyController moneyController;
 
-    public MoneyController mc;
-
-    public List<Truck> trucks = new List<Truck>();
-    public List<Office> offices = new List<Office>();
-
-    public int money = 0;
+    [Header("Options")]
     public int dayDuration = 5;
     public int eraningsPerTruck;
 
@@ -43,19 +41,23 @@ public class GameController : MonoBehaviour
 
     public bool isInternational = false;
 
-    private int daysElapsed =1;
+    [Header("not visible")]
+    private int daysElapsed = 1;
+
+    public List<Truck> trucks = new List<Truck>();
+    public List<Office> offices = new List<Office>();
 
     void Start()
     {
         trucks.Add(new Truck());
         offices.Add(new Office());
-        UpdateText();
+        UpdateUI();
     }
-      
-    private void UpdateText()
+
+    private void UpdateUI()
     {
         truckCount.text = trucks.Count.ToString();
-        moneyCount.text = money.ToString();
+        moneyCount.text = moneyController.Money.ToString();
         officCount.text = offices.Count.ToString();
         elapsedDays.text = daysElapsed.ToString();
         truckCost.text = iTruckCost.ToString();
@@ -73,40 +75,40 @@ public class GameController : MonoBehaviour
         {
             btnInternational.gameObject.SetActive(true);
         }
-        UpdateText();
+        UpdateUI();
     }
 
     public void AddTruck()
     {
-        if (money >= iTruckCost)
+        if (moneyController.Money >= iTruckCost)
         {
             trucks.Add(new Truck());
-            money -= iTruckCost;
+            moneyController.Money -= iTruckCost;
             eventHappend.text = "You buy a new truck";
         }
         SwitchLevel();
-        UpdateText();
+        UpdateUI();
     }
 
     public void AddOffice()
     {
-        if (money >= iOfficeCost)
+        if (moneyController.Money >= iOfficeCost)
         {
             offices.Add(new Office());
-            money -= iOfficeCost;
+            moneyController.Money -= iOfficeCost;
             eventHappend.text = "You buy a new office";
         }
         SwitchLevel();
-        UpdateText();
+        UpdateUI();
     }
 
     public void SwitchInternational()
     {
-        if (money >= iInternationalCost && trucks.Count >= 50 && offices.Count >= 10 && isInternational == false)
+        if (moneyController.Money >= iInternationalCost && trucks.Count >= 50 && offices.Count >= 10 && isInternational == false)
         {
             gerMap.gameObject.SetActive(false);
             euMap.gameObject.SetActive(true);
-            money -= iInternationalCost;
+            moneyController.Money -= iInternationalCost;
             offices.Clear();
             offices.Add(new Office());
             isInternational = true;
@@ -116,7 +118,7 @@ public class GameController : MonoBehaviour
             iTruckCost *= 5;
             eventHappend.text = "Very good, you grow international";
         }
-        UpdateText();
+        UpdateUI();
     }
 
     public void NextDay()
@@ -125,7 +127,7 @@ public class GameController : MonoBehaviour
         btnNextDay.gameObject.SetActive(false);
         StartCoroutine(ElapsedTime());
         daysElapsed++;
-        UpdateText();
+        UpdateUI();
         wonTheGame();
     }
 
@@ -141,8 +143,8 @@ public class GameController : MonoBehaviour
         btnNextDay.enabled = true;
         btnNextDay.gameObject.SetActive(true);
         AddMoney();
-        events.rndEvent();
-        UpdateText();
+        eventController.rndEvent();
+        UpdateUI();
     }
 
     public void AddMoney()
@@ -151,17 +153,15 @@ public class GameController : MonoBehaviour
         {
             foreach (Truck truck in trucks)
             {
-                money += eraningsPerTruck;
-                
+                moneyController.Money += eraningsPerTruck;
             }
-           
         }
-        UpdateText();
+        UpdateUI();
     }
 
     public void wonTheGame()
     {
-        if (money > 250000 && trucks.Count > 500 && offices.Count > 50)
+        if (moneyController.Money > 250000 && trucks.Count > 500 && offices.Count > 50)
         {
             winingPanel.gameObject.SetActive(true);
         }
@@ -173,9 +173,8 @@ public class GameController : MonoBehaviour
         {
             trucks.Add(new Truck());
             offices.Add(new Office());
-            money = 600000;
+            moneyController.Money += 600000;
         }
-        UpdateText();
+        UpdateUI();
     }
-
 }
